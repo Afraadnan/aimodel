@@ -1,18 +1,23 @@
 
 
-<html>
-  <body>
 
-    <h1> inside html </h1>
-    <form action="{{url for ('predict') }}" method="POST">
-     <input type="float" name="Sale Units" placeholder="Enter sale units" />    <br> <br>
-<input type="float" name="Target Units" placeholder="Enter Target units" />
-     <br> <br>
- <button type= "submit"> Predict </button>
-</form>
 
-   <h1> the estimated ach sale is {{predictiction_text}}
-</h1>
-         </body>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Float Input Form</title>
+</head>
+<body>
+    <h1>Enter Float Values</h1>
+    <form action="{{ url_for('predict') }}" method="POST">
+        <label for="x">Enter value for x:</label>
+        <input type="number" step="any" id="x" name="x" required>
+        <br>
+        <label for="y">Enter value for y:</label>
+        <input type="number" step="any" id="y" name="y" required>
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+</body>
 </html>
