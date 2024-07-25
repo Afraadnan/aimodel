@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify
 import numpy as np
 import pickle
 from ai_model import reg
-
+from waitress import serve
 # Save the model to a file
 pickle.dump(reg, open('ai_model.pkl', 'wb'))
 
