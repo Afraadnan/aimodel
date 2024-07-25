@@ -4,10 +4,10 @@ import pickle
 from ai_model import reg
 
 # Save the model to a file
-pickle.dump(reg, open('AI_model.pkl', 'wb'))
+pickle.dump(reg, open('ai_model.pkl', 'wb'))
 
 # Load the model from the file
-model = pickle.load(open('AI_model.pkl', 'rb'))
+model = pickle.load(open('ai_model.pkl', 'rb'))
 
 print(model.predict([[20, 40]]))  # Example prediction
 
