@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, jsonify
+import numpy as np
 import pickle
+from ai_model import reg
 
-# Load the trained model
-with open('ai_model.pkl', 'rb') as model_file:
-    reg = pickle.load(model_file)
+from flask import Flask,request, render_template
 
 app = Flask(__name__)
 
@@ -13,19 +13,12 @@ def home():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    try:
-        x = float(request.form['x'])
-        y = float(request.form['y'])
-        # Prepare the input data for prediction
-        input_data = [[x, y]]
-        # Make prediction using the loaded model
-        prediction = reg.predict(input_data)
-        result = prediction[0]  # Assuming the model returns an array
-        return f"Prediction: {result}"
-    except ValueError:
-        return "Invalid input. Please enter valid float values."
-    except Exception as e:
-        return f"An error occurred: {str(e)}"
+ int_features=[float(x) for x in request.form.values()]
+ 
 
+ features=[np.array(int_features)]
+ prediction= reg.predict(features)
+ output= round(prediction[0],2)
+ return render_template('index.html',prediction_text='ach sales {}'.format(output))
 if __name__ == "__main__":
     app.run(debug=True)
