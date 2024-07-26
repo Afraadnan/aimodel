@@ -1,15 +1,9 @@
 from flask import Flask, render_template, request, jsonify
-import numpy as np
 import pickle
-from ai_model import reg
-from waitress import serve
-# Save the model to a file
-pickle.dump(reg, open('ai_model.pkl', 'wb'))
 
-# Load the model from the file
-model = pickle.load(open('ai_model.pkl', 'rb'))
-
-print(model.predict([[20, 40]]))  # Example prediction
+# Load the trained model
+with open('ai_model.pkl', 'rb') as model_file:
+    reg = pickle.load(model_file)
 
 app = Flask(__name__)
 
@@ -19,17 +13,19 @@ def home():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Get the data from the POST request
-    data = request.form.to_dict()
-    int_features = [int(data[feature]) for feature in data]
-    final_features = [np.array(int_features)]  # Convert to array
+    try:
+        x = float(request.form['x'])
+        y = float(request.form['y'])
+        # Prepare the input data for prediction
+        input_data = [[x, y]]
+        # Make prediction using the loaded model
+        prediction = reg.predict(input_data)
+        result = prediction[0]  # Assuming the model returns an array
+        return f"Prediction: {result}"
+    except ValueError:
+        return "Invalid input. Please enter valid float values."
+    except Exception as e:
+        return f"An error occurred: {str(e)}"
 
-    # Make prediction
-    prediction = model.predict(final_features)
-    output = round(prediction[0], 2)
-
-    return render_template('index.html', prediction_text='Time = {}'.format(output))
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
-     serve(app, host='0.0.0.0', port=8000)
